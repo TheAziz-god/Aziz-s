@@ -1,10 +1,11 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
 
     private final String name;
     private int score;
-    private final ArrayList<Card> collectedCards;
+    private final List<Card> collectedCards;
 
     public Player(String name) {
         this.name = name;
@@ -28,14 +29,19 @@ public class Player {
         collectedCards.add(card);
     }
 
-    public ArrayList<Card> getCollectedCards() {
+    public List<Card> getCollectedCards() {
         return collectedCards;
     }
 
     public void showCards() {
-        System.out.println(name + " cards:");
+        if (collectedCards.isEmpty()) {
+            System.out.println(name + " collected no cards.");
+            return;
+        }
+
+        System.out.println(name + " collected cards:");
         for (Card c : collectedCards) {
-            System.out.println(c);
+            System.out.println(" - " + c);
         }
     }
 

@@ -2,11 +2,11 @@ import java.util.*;
 
 public class Game {
 
-    private ArrayList<Player> players;
-    private Deck deck;
-    private int rounds;
+    private final List<Player> players;
+    private final Deck deck;
+    private final int rounds;
 
-    public Game(ArrayList<Player> players, int rounds) {
+    public Game(List<Player> players, int rounds) {
         this.players = players;
         this.rounds = rounds;
         this.deck = new Deck();
@@ -15,30 +15,31 @@ public class Game {
     public void playGame() {
 
         for (int r = 1; r <= rounds; r++) {
-            if (deck.size() < players.size()) {
-                System.out.println("Not enough cards left to continue the game.");
-                break;
-            }
 
-            System.out.println("\nRound " + r);
+            System.out.println("\n----- Round " + r + " -----");
 
-            HashMap<Player, Card> roundCards = new HashMap<>();
+            Map<Player, Card> roundCards = new HashMap<>();
 
-            for (Player p : players) {
-                Card c = deck.deal();
-                if (c == null) {
+            for (Player player : players) {
+
+                Card card = deck.deal();
+
+                if (card == null) {
                     System.out.println("Deck is empty.");
                     return;
                 }
-                roundCards.put(p, c);
-                System.out.println(p.getName() + " drew " + c);
+
+                roundCards.put(player, card);
+
+                System.out.println(player.getName() + " drew " + card);
             }
 
             Card highest = Collections.max(roundCards.values());
 
-            ArrayList<Player> winners = new ArrayList<>();
+            List<Player> winners = new ArrayList<>();
 
             for (Map.Entry<Player, Card> entry : roundCards.entrySet()) {
+
                 if (entry.getValue().compareTo(highest) == 0) {
                     winners.add(entry.getKey());
                 }
@@ -54,15 +55,17 @@ public class Game {
 
             } else {
 
-                System.out.println("Tie!");
+                System.out.println("Tie between players:");
 
                 for (Player p : winners) {
+                    System.out.println(p.getName());
                     p.addPoints(1);
                     p.addCard(roundCards.get(p));
                 }
             }
 
             for (Map.Entry<Player, Card> entry : roundCards.entrySet()) {
+
                 if (!winners.contains(entry.getKey())) {
                     deck.returnCard(entry.getValue());
                 }
@@ -73,7 +76,9 @@ public class Game {
     }
 
     private void showScores() {
-        System.out.println("\nScores:");
+
+        System.out.println("\nCurrent Scores:");
+
         for (Player p : players) {
             System.out.println(p.getName() + " : " + p.getScore());
         }
@@ -91,25 +96,35 @@ public class Game {
     public void showWinner() {
 
         players.sort((a, b) -> b.getScore() - a.getScore());
-        int highestScore = players.get(0).getScore();
 
         System.out.println("\nFinal Scores:");
+
+        int highest = players.get(0).getScore();
 
         for (Player p : players) {
             System.out.println(p.getName() + " : " + p.getScore());
         }
 
-        ArrayList<Player> winners = new ArrayList<>();
-        for (Player player : players) {
-            if (player.getScore() == highestScore) {
-                winners.add(player);
+        List<Player> winners = new ArrayList<>();
+
+        for (Player p : players) {
+
+            if (p.getScore() == highest) {
+                winners.add(p);
             }
         }
 
         if (winners.size() == 1) {
-            System.out.println("Winner: " + winners.get(0).getName());
+
+            System.out.println("\nWinner: " + winners.get(0).getName());
+
         } else {
-            System.out.println("Winners: " + winners);
+
+            System.out.println("\nGame ended in a draw between:");
+
+            for (Player p : winners) {
+                System.out.println(p.getName());
+            }
         }
     }
 }
