@@ -1,36 +1,31 @@
 import java.util.*;
+
 public class Deck {
-    private final ArrayList<Card> deck = new ArrayList<>();
+
+    private List<Card> cards;
 
     public Deck() {
-        for (int i = 0; i < 52; i++) {
-            deck.add(new Card(i % 13, i / 13));
+        cards = new ArrayList<>();
+
+        for (int suit = 0; suit < 4; suit++) {
+            for (int rank = 0; rank < 13; rank++) {
+                cards.add(new Card(rank, suit));
+            }
         }
-        Collections.shuffle(deck);
+
+        Collections.shuffle(cards);
     }
 
     public Card deal() {
-        if (!deck.isEmpty()) {
-            Card c = deck.get(0);
-            deck.remove(0);
-            return c;
-        } else {
-            return null;
-        }
+        if (cards.isEmpty()) return null;
+        return cards.remove(0);
     }
 
-    public void returnCard(Card c) {
-        if (c != null) {
-            deck.add(c);
-        }
+    public void returnCard(Card card) {
+        cards.add(card);
     }
 
     public int size() {
-        return deck.size();
-    }
-
-    public boolean contains(Card card) {
-        return deck.contains(card);
+        return cards.size();
     }
 }
-
